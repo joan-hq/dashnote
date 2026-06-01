@@ -1,16 +1,10 @@
 import { NoteDetail } from '@/features/notes/components/NoteDetail';
 import { ActionBar } from '@/features/notes/components/ActionBar';
 import { useNoteContext } from "../context/noteContext";
-import { AIChatDrawer } from '@/components/common/overlays/AIChat/AIChatDrawer';
 
-interface NoteDisplayProps {
-    isAiOpen: boolean;
-    onAiOpen: () => void;
-    onAiClose: () => void;
-}
 
-export const NoteDisplay = ({ isAiOpen, onAiOpen, onAiClose }: NoteDisplayProps) => {
-    const { selectedNote, createNote } = useNoteContext();
+export const NoteDisplay = () => {
+    const { selectedNote } = useNoteContext();
 
     return (
         <div className="relative w-full h-full flex flex-col overflow-hidden bg-transparent">

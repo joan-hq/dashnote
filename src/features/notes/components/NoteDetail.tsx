@@ -1,8 +1,6 @@
-import { useRef, useEffect, useState } from "react";
 import { NoteTagDisplay } from "./NoteTagDisplay";
-import { Divider, Typography, TextareaAutosize } from "@mui/material";
+import { Typography } from "@mui/material";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import MDEditor from '@uiw/react-md-editor';
 import { useNoteContext } from "../context/noteContext";
 import { findManyObjectsByIds } from "@/utils/array";
 import { MarkdownEditor } from "@/features/notes/components/MarkdownEditor";
@@ -33,17 +31,11 @@ const Header = ({ title, onTitleChange }: Pick<NoteDetailProps, 'title' | 'onTit
 
 
 const LastEditInfo = ({ lastEdit }: Pick<NoteDetailProps, 'lastEdit'>) => {
-    const formattedDate = new Date(lastEdit).toLocaleString('en', {
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-    });
 
     return (
         <div className="flex items-center gap-1 text-xs text-[--color-text-muted]">
             <AccessTimeIcon sx={{ fontSize: 12 }} />
-            <span>{formattedDate}</span>
+            <span>{lastEdit}</span>
         </div>
     );
 };
@@ -96,6 +88,7 @@ export const NoteDetail = () => {
 
                 />
                 <LastEditInfo lastEdit={formatRelativeTime(selectedNote.lastEdit)} />
+
                 <NoteTagDisplay
                     allTags={tags}
                     linkedTags={findManyObjectsByIds(selectedNote.tags, tags)}
