@@ -50,12 +50,13 @@ export const AIChatDrawer = ({ isOpen, onClose, onCreateNote }: AIChatDrawerProp
 
   return (
     <div
-      className="fixed right-0 top-0 z-[1000] flex flex-col w-full md:w-[400px] border-l border-gray-100"
+      className="fixed right-0 top-0 z-[1000] flex flex-col w-full md:w-[400px] border-l border-gray-100 overflow-hidden"
       style={{
         background: 'var(--surface)',
         color: 'var(--text-primary)',
         boxShadow: '-4px 0 24px rgba(30,58,138,0.08)',
         height: '100dvh',
+        maxHeight: '-webkit-fill-available',
       }}
     >
       {/* Header */}
