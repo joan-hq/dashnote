@@ -1,6 +1,8 @@
 'use client';
 import { useEffect, useRef } from 'react';
 import { useAIChat } from '@/components/common/overlays/AIChat/useAIChat';
+import { useNoteContext } from '@/features/notes/context/noteContext';
+
 
 interface AIChatDrawerProps {
   isOpen: boolean;
@@ -9,7 +11,9 @@ interface AIChatDrawerProps {
   onCreateNote: (title: string, content: string) => void;
 }
 
-export const AIChatDrawer = ({ isOpen, onClose, noteContent, onCreateNote }: AIChatDrawerProps) => {
+export const AIChatDrawer = ({ isOpen, onClose, onCreateNote }: AIChatDrawerProps) => {
+  const { selectedNote, updateNote } = useNoteContext();
+
   const {
     messages,
     input,
@@ -17,8 +21,12 @@ export const AIChatDrawer = ({ isOpen, onClose, noteContent, onCreateNote }: AIC
     loading,
     handleSend,
     clearChat,
-    handleSummarizeAndSave
-  } = useAIChat({ noteContent, onCreateNote });
+    handleSummarizeAndSave,
+    handleAppendToNote
+  } = useAIChat({
+    noteContent: selectedNote?.content ?? '',
+    onCreateNote
+  });
 
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
@@ -33,6 +41,10 @@ export const AIChatDrawer = ({ isOpen, onClose, noteContent, onCreateNote }: AIC
   useEffect(() => {
     if (!isOpen) clearChat();
   }, [isOpen, clearChat]);
+
+  useEffect(() => {
+    if (isOpen) clearChat();
+  }, [selectedNote?.id, clearChat]);
 
   if (!isOpen) return null;
 
@@ -79,6 +91,27 @@ export const AIChatDrawer = ({ isOpen, onClose, noteContent, onCreateNote }: AIC
             ) : (
               <><span>📝</span><span>Summarize and save to a note</span></>
             )}
+          </button>
+        </div>
+      )}
+
+
+      {/* Appent to Note： */}
+      {messages.length > 0 && selectedNote && (
+        <div className="px-5 pb-2 shrink-0">
+          <button
+            onClick={() => handleAppendToNote(
+              selectedNote.content,
+              selectedNote.id,
+              updateNote,
+              onClose
+            )}
+            disabled={loading}
+            className="btn-primary w-full text-xs rounded-xl disabled:opacity-50 disabled:pointer-events-none active:scale-[0.98]"
+            style={{ background: 'var(--secondary)', color: 'var(--primary)' }}
+          >
+            <span>➕</span>
+            <span>Append to current note</span>
           </button>
         </div>
       )}

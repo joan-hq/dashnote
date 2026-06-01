@@ -1,6 +1,20 @@
-import { generateText } from 'ai';
+import { generateText} from 'ai';
 import { google } from "@ai-sdk/google";
 import { NextResponse } from 'next/server';
+
+const generateWithRetry = async (options: any, retries = 3): Promise<any> => {
+  for (let i = 0; i < retries; i++) {
+    try {
+      return await generateText(options);
+    } catch (error: any) {
+      if (error?.statusCode === 503 && i < retries - 1) {
+        await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1))); // 1s, 2s, 3s
+        continue;
+      }
+      throw error;
+    }
+  }
+};
 
 export async function POST(req: Request) {
   try {
@@ -14,7 +28,7 @@ export async function POST(req: Request) {
         ? messages.map((m: any) => `${m.role === 'user' ? 'User' : 'AI Assistant'}: ${m.content}`).join('\n')
         : '';
 
-      const { text } = await generateText({
+      const { text } = await generateWithRetry({
         model: google('gemini-2.5-flash'),
         system: `You are a professional note-taking assistant. Your job is to summarize conversations into clean, well-structured Markdown notes.`,
         messages: [
@@ -56,7 +70,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Messages cannot be empty" }, { status: 400 });
     }
 
-   const systemPrompt = noteContext
+   const systemPrompt = noteContext?.trim()
   ? `You are a DashNote smart assistant. 
 
       IMPORTANT RULES:
@@ -67,9 +81,11 @@ export async function POST(req: Request) {
 
       [Background Note Context - use ONLY if user asks about it]:
       ${noteContext}`
-        : `You are a DashNote smart assistant. Respond concisely and professionally.`;
+        : `You are a DashNote smart assistant. 
+            The user currently has an empty note open. 
+            Answer the user's questions directly and concisely.`;
 
-    const { text } = await generateText({
+    const { text } = await generateWithRetry({
       model: google('gemini-2.5-flash'),
       system: systemPrompt,
       messages: messages.map((m: any) => ({
@@ -82,6 +98,7 @@ export async function POST(req: Request) {
 
   } catch (error: any) {
     console.error("Backend runtime handling error:", error);
+    console.error("Error details:", error?.message, error?.status, error?.cause); 
     return NextResponse.json(
       { error: error.message || "Unknown internal server error" },
       { status: 500 }

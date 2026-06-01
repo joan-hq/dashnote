@@ -118,6 +118,39 @@ export function useAIChat({ noteContent, onCreateNote }: UseAIChatOptions) {
     }
   };
 
+  const handleAppendToNote = async (
+  currentContent: string,
+  noteId: string,
+  onUpdate: (id: string, changes: Partial<Note>) => Promise<void>,
+  onSuccess?: () => void
+) => {
+  if (messages.length === 0 || loading) return;
+  setLoading(true);
+
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        messages,
+        noteContext: noteContent,
+        isSummarizeAction: true
+      })
+    });
+
+    const data = await res.json();
+    if (data?.content) {
+      const appendedContent = `${currentContent}\n\n---\n✨ AI Append · ${new Date().toLocaleDateString()}\n${data.content}`;
+      await onUpdate(noteId, { content: appendedContent });
+      onSuccess?.();
+    }
+  } catch (err) {
+    console.error('Append failed:', err);
+  } finally {
+    setLoading(false);
+  }
+  };
+
   const clearChat = useCallback(() => {
     setMessages([]);
     setInput('');
@@ -131,6 +164,7 @@ export function useAIChat({ noteContent, onCreateNote }: UseAIChatOptions) {
     loading: loading || summarizing, 
     handleSend,
     clearChat,
-    handleSummarizeAndSave
+    handleSummarizeAndSave,
+    handleAppendToNote,
   };
 }

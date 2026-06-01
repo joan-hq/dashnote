@@ -95,7 +95,7 @@ export const useNotes = () => {
    const updateNote = useCallback(async (id: string, changes: Partial<Note>) : Promise<void> => {
        console.log('updateNote called', id, changes);
       const previousNotes = [...notes];
-      setNotes(prev => prev.map(note => note.id === id ? {...note, ...changes} :  note));
+      setNotes(prev => prev.map(note => note.id === id ? {...note, ...changes, lastEdit: new Date().toISOString()} :  note));
 
       try{
          console.log('before updateNoteAction');

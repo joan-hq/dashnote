@@ -1,6 +1,8 @@
 import { Chip } from '@mui/material';
 import { Tag } from '@/features/tags/types/tagType';
 import { Archive as ArchiveIcon, AccessTime as AccessTimeIcon } from "@mui/icons-material";
+import { formatRelativeTime } from '@/utils/date';
+
 
 
 interface NoteCardProps {
@@ -69,7 +71,7 @@ export const NoteCard = ({ title, tags, tagDisplayLimit, lastEdit, isArchived, i
 
             <div className="flex items-center gap-1 text-xs text-[--color-text-muted]">
                 <AccessTimeIcon style={{ fontSize: 12 }} />
-                <span>{lastEdit}</span>
+                <span>{formatRelativeTime(lastEdit)}</span>
             </div>
         </div>
     );

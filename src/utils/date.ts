@@ -19,16 +19,30 @@ export const formatDate = (
 
 
 // formatRelativeTIme(date)
-export const formatRelativeTIme = (dateString: string) : string => {
-  const date = parseISO(dateString);
+export const formatRelativeTime = (dateString: string) : string => {
 
-  if(!isValid(dateString)) return dateString;
+ if (!dateString) return '';
+  
+  let date = parseISO(dateString);
+    console.log('parseISO result:', date, 'isValid:', isValid(date));
+  if (!isValid(date)) {
+    date = new Date(dateString);
+  }
+  if (!isValid(date)) return ''; 
 
-  if(isToday(dateString)) return "Today";
+   const now = new Date();
+  const target = new Date(dateString);
+  const diffMs = now.getTime() - target.getTime();
+  const diffMinutes = Math.floor(diffMs / 1000 / 60);
+  const diffHours = Math.floor(diffMinutes / 60);
+  const diffDays = Math.floor(diffHours / 24);
 
-  if(isYesterday(dateString)) return "Yesterday";
-
-  return format(date, "dd mm");
+  if (diffMinutes < 1) return 'Just now';
+  if (diffMinutes < 60) return `${diffMinutes}m ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffDays === 1) return 'Yesterday';
+  
+  return target.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
 

@@ -6,6 +6,8 @@ import MDEditor from '@uiw/react-md-editor';
 import { useNoteContext } from "../context/noteContext";
 import { findManyObjectsByIds } from "@/utils/array";
 import { MarkdownEditor } from "@/features/notes/components/MarkdownEditor";
+import { formatRelativeTime } from '@/utils/date';
+
 
 
 interface NoteDetailProps {
@@ -83,7 +85,6 @@ export const NoteDetail = () => {
             </div>
         );
     }
-    console.log("*****markdown******", JSON.stringify(selectedNote.content))
 
     return (
         <div className="relative p-6 flex flex-col gap-3 h-full">
@@ -94,7 +95,7 @@ export const NoteDetail = () => {
                     onTitleChange={(newTitle) => updateNote(selectedNote.id, { title: newTitle })}
 
                 />
-                <LastEditInfo lastEdit={selectedNote.lastEdit} />
+                <LastEditInfo lastEdit={formatRelativeTime(selectedNote.lastEdit)} />
                 <NoteTagDisplay
                     allTags={tags}
                     linkedTags={findManyObjectsByIds(selectedNote.tags, tags)}

@@ -8,14 +8,33 @@ import { useNoteContext } from '@/features/notes/context/noteContext';
 import { ActionButton } from '@/components/common/buttons/ActionButton';
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import { useRouter, useParams } from 'next/navigation';
+import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
+import { DropDown } from '@/components/DropDown';
 
 export const DashboardClient = ({ children }: { children: ReactNode }) => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [isAiOpen, setIsAiOpen] = useState(false);
-    const { selectedNote, createNote } = useNoteContext();
+    const { selectedNote, createNote, updateNote, setSelectedNoteId, permanentlyDeleteNote } = useNoteContext();
     const router = useRouter();
     const params = useParams();
     const hasNote = !!params?.id;
+
+    const isArchived = selectedNote?.status === 'archived';
+    const isTrashed = selectedNote?.status === 'trashed';
+
+    const mobileNoteActions = isTrashed ? [
+        { label: 'Archive', onClick: () => { updateNote(selectedNote!.id, { status: 'archived' }); router.push('/dashboard'); } },
+        { label: 'Restore', onClick: () => { updateNote(selectedNote!.id, { status: 'active' }); router.push('/dashboard'); } },
+        { label: 'Delete Forever', onClick: () => { permanentlyDeleteNote(selectedNote!.id); router.push('/dashboard'); } },
+    ] : isArchived ? [
+        { label: 'Restore', onClick: () => { updateNote(selectedNote!.id, { status: 'active' }); router.push('/dashboard'); } },
+        { label: 'Move to Trash', onClick: () => { updateNote(selectedNote!.id, { status: 'trashed' }); router.push('/dashboard'); } },
+        { label: 'Delete Forever', onClick: () => { permanentlyDeleteNote(selectedNote!.id); router.push('/dashboard'); } },
+    ] : [
+        { label: 'Archive', onClick: () => { updateNote(selectedNote!.id, { status: 'archived' }); router.push('/dashboard'); } },
+        { label: 'Move to Trash', onClick: () => { updateNote(selectedNote!.id, { status: 'trashed' }); router.push('/dashboard'); } },
+        { label: 'Delete Forever', onClick: () => { permanentlyDeleteNote(selectedNote!.id); router.push('/dashboard'); } },
+    ];
 
     return (
         <>
@@ -48,6 +67,15 @@ export const DashboardClient = ({ children }: { children: ReactNode }) => {
                             <span className="font-semibold text-sm truncate mx-2 flex-1" style={{ color: 'var(--text-primary)' }}>
                                 {selectedNote?.title || 'Untitled'}
                             </span>
+                            <DropDown
+                                trigger={(onClick) => (
+                                    <ActionButton title="More" handleFabClick={(e) => e && onClick(e)}>
+                                        <MoreVertOutlinedIcon fontSize="small" />
+                                    </ActionButton>
+                                )}
+                                items={mobileNoteActions}
+                                menuItemClassName="text-sm"
+                            />
 
                         </>
                     ) : (

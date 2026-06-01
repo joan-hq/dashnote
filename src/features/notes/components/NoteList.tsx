@@ -1,7 +1,7 @@
 import { NoteCard } from "./NoteCard";
 import { useNoteContext } from "../context/noteContext";
 import { findManyObjectsByIds } from "@/utils/array";
-import { Stack, Typography, Box } from "@mui/material";
+import { Typography, Box } from "@mui/material";
 import { useRouter } from 'next/navigation';
 
 
@@ -20,6 +20,7 @@ export const NoteList = () => {
         <div className="flex flex-col p-2 gap-0.5">
             {notes.map(
                 (note) => {
+                    console.log("Note List lastEdit", note.lastEdit);
                     const displayTags = findManyObjectsByIds(note.tags, tags);
                     const isAi = note.type === "ai_summary";
                     const finalTags = isAi
@@ -38,7 +39,7 @@ export const NoteList = () => {
                                 tags={finalTags}
                                 tagDisplayLimit={3}
                                 isArchived={note.status === 'archived'}
-                                lastEdit={new Date(note.lastEdit).toLocaleDateString()}
+                                lastEdit={note.lastEdit}
                                 handleNoteCardClick={() => router.push(`/dashboard/${note.id}`)}
                                 selectedTagId={filterTagId}
                                 isSelected={note.id === selectedNoteId || (!!filterTagId && note.tags.includes(filterTagId))}
