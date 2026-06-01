@@ -46,10 +46,34 @@ export const AIChatDrawer = ({ isOpen, onClose, onCreateNote }: AIChatDrawerProp
     if (isOpen) clearChat();
   }, [selectedNote?.id, clearChat]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.visualViewport) {
+        const viewport = window.visualViewport;
+        const drawer = document.getElementById('ai-drawer');
+        if (drawer) {
+          drawer.style.height = `${viewport.height}px`;
+          drawer.style.top = `${viewport.offsetTop}px`;
+        }
+      }
+    };
+
+    window.visualViewport?.addEventListener('resize', handleResize);
+    window.visualViewport?.addEventListener('scroll', handleResize);
+    handleResize();
+
+    return () => {
+      window.visualViewport?.removeEventListener('resize', handleResize);
+      window.visualViewport?.removeEventListener('scroll', handleResize);
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
+
 
   return (
     <div
+      id="ai-drawer"
       className="fixed right-0 top-0 z-[1000] flex flex-col w-full md:w-[400px] border-l border-gray-100 overflow-hidden"
       style={{
         background: 'var(--surface)',
