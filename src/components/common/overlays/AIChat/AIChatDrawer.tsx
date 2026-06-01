@@ -199,8 +199,7 @@ export const AIChatDrawer = ({ isOpen, onClose, onCreateNote }: AIChatDrawerProp
         <button
           onClick={handleSend}
           disabled={loading}
-          className="btn-primary px-4 rounded-xl active:scale-95 disabled:opacity-50 disabled:pointer-events-none"
-          shrink-0
+          className="btn-primary px-4 rounded-xl active:scale-95 disabled:opacity-50 disabled:pointer-events-none shrink-0"
         >
           Send
         </button>
