@@ -4,9 +4,11 @@ import DriveFileMoveRtlOutlinedIcon from '@mui/icons-material/DriveFileMoveRtlOu
 import FolderDeleteOutlinedIcon from '@mui/icons-material/FolderDeleteOutlined';
 import { Typography } from "@mui/material";
 import { useNoteContext } from "../context/noteContext";
+import { useRouter } from 'next/navigation';
+
 
 export const NoteStatusFilter = () => {
-
+    const router = useRouter();
     const { filterStatus, setFilterStatus, countsNote, selectNote } = useNoteContext();
 
     const filterOptions = [
@@ -24,7 +26,7 @@ export const NoteStatusFilter = () => {
                     title={opt.title}
                     icon={opt.icon}
                     selected={filterStatus === opt.type}
-                    handleFilter={() => { setFilterStatus(opt.type); selectNote(null) }}
+                    handleFilter={() => { setFilterStatus(opt.type); router.push('/dashboard'); }}
                     action={<Typography>{countsNote[opt.type] || 0}</Typography>}
                     className={`filter-btn ${isSelected ? 'filter-btn-active' : ''}`}
                 />
