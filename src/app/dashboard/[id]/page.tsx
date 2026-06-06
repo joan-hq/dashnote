@@ -31,9 +31,9 @@ export default function NoteDetailPage() {
 
     return (
         <NoteDisplay
-            isAiOpen={isAiOpen}
-            onAiOpen={() => setIsAiOpen(true)}
-            onAiClose={() => setIsAiOpen(false)}
+        // isAiOpen={isAiOpen}
+        // onAiOpen={() => setIsAiOpen(true)}
+        // onAiClose={() => setIsAiOpen(false)}
         />
     );
 }

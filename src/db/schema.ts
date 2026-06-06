@@ -59,21 +59,3 @@ export const users = pgTable("users", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-// export const dailySummaries = pgTable(
-//   "daily_summaries", 
-//   {
-//   id: uuid("id").primaryKey().defaultRandom(),
-//   userId: text("user_id").notNull().references(() => users.id, { onDelete: 'cascade' }),
-//   title: text("title").notNull().default(''),
-//   content: text("content").notNull().default(''),
-//   status: noteStatusEnum("status").default("active").notNull(),
-//   createdAt: timestamp("create_at").defaultNow().notNull(),
-//   lastEdit: timestamp("last_edit").defaultNow().notNull(),
-
-//   date: varchar("date", { length: 10 }).notNull(),
-//   },
-//   (table) => [
-//     uniqueIndex("user_date_unq").on(table.userId, table.date)
-//   ]
-
-// )

@@ -1,0 +1,18 @@
+{
+    "manifest_version": 3,
+    "name": "DashNote Sync",
+    "version": "1.0",
+    "description": "sync AI chat to DashNote",
+    "permissions": ["activeTab", "scripting"],
+    "host_permissions": [
+        "https://chatgpt.com/*",
+        "https://gemini.google.com/*",
+        "https://master.d105jspeg7cw15.amplifyapp.com/*"
+    ],
+    "content_scripts": [
+        {
+            "matches": ["https://chatgpt.com/*", "https://gemini.google.com/*"],
+            "js": ["content.js"]
+        }
+    ]
+}

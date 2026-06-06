@@ -53,7 +53,6 @@ export function LoginForm() {
         padding: "0 24px",
       }}>
         {/* Icon */}
-        {/* 去掉背景 div，直接渲染 icon */}
         <NoteIcon width={120} height={120} style={{ marginBottom: "16px" }} />
 
         <p style={{

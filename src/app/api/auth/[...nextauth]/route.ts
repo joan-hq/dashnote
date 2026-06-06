@@ -19,8 +19,6 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     async signIn({ user }) {
-    console.log('signIn user:', user.email); 
-    console.log('allowedEmails:', process.env.ALLOWED_EMAILS); 
       const allowedEmails = process.env.ALLOWED_EMAILS?.split(",") ?? [];
       if (!allowedEmails.includes(user.email!)) return false;
       
