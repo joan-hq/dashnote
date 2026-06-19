@@ -1,5 +1,4 @@
 import { ReactNode, useState, useRef, useEffect } from 'react';
-import { createPortal } from 'react-dom';
 
 interface DropDownItem {
     label: string;
@@ -16,38 +15,34 @@ interface DropDownProps {
 
 export const DropDown = ({ trigger, items, header, menuItemClassName }: DropDownProps) => {
     const [open, setOpen] = useState(false);
-    const [position, setPosition] = useState({ top: 0, left: 0 });
     const menuRef = useRef<HTMLDivElement>(null);
     const triggerRef = useRef<HTMLDivElement>(null);
 
-
     useEffect(() => {
+        if (!open) return;
         const handleClickOutside = (e: MouseEvent) => {
-            if (
-                menuRef.current && !menuRef.current.contains(e.target as Node) &&
-                triggerRef.current && !triggerRef.current.contains(e.target as Node)
-            ) {
+            const target = e.target as Node;
+            if (!triggerRef.current?.contains(target) && !menuRef.current?.contains(target)) {
                 setOpen(false);
             }
         };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
-
-    const handleTriggerClick = (e: React.MouseEvent<HTMLElement>) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        setPosition({ top: rect.bottom + 4, left: rect.left });
-        setOpen(prev => !prev);
-    };
+        const timer = setTimeout(() => {
+            document.addEventListener('mousedown', handleClickOutside);
+        }, 0);
+        return () => {
+            clearTimeout(timer);
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [open]);
 
     return (
         <div className="relative" ref={triggerRef}>
-            {trigger(handleTriggerClick)}
-            {open && typeof document !== 'undefined' && createPortal(
+            {trigger(() => setOpen(prev => !prev))}
+            {open && (
                 <div
                     ref={menuRef}
-                    className="fixed min-w-[160px] rounded-xl shadow-lg z-50 py-1 border border-gray-100"
-                    style={{ background: 'var(--surface)', top: position.top, left: position.left }}
+                    className="absolute bottom-full mb-1 left-0  min-w-[160px] rounded-xl shadow-lg z-50 py-1 border border-gray-100"
+                    style={{ background: 'var(--surface)' }}
                 >
                     {header}
                     {items.map((item) => (
@@ -63,8 +58,7 @@ export const DropDown = ({ trigger, items, header, menuItemClassName }: DropDown
                             {item.label}
                         </button>
                     ))}
-                </div>,
-                document.body
+                </div>
             )}
         </div>
     );
