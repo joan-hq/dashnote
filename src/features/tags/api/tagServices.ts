@@ -7,10 +7,10 @@ import { TagDb } from '@/db/tagDb';
 
 export const TagService = {
 
-    getAll: async() : Promise<Tag[]>=> {
+    getAll: async(userId:string) : Promise<Tag[]>=> {
         try{
-            console.log(TagDb.getAll());
-            return await TagDb.getAll()
+            console.log(TagDb.getAll(userId));
+            return await TagDb.getAll(userId)
             
         }catch(error){
             console.log("Failed to fetch tags:", error)
@@ -65,6 +65,7 @@ export const TagService = {
     },
 
     create: async (
+        userId: string,
         label: string, 
         allTags: Tag[],
         color: string = "#3b82f6"
@@ -79,6 +80,7 @@ export const TagService = {
                 
         const newTag = { 
             id: uuidv4(),
+             userId: userId,
             label: label.trim(),
             color: color,
             }
@@ -87,6 +89,7 @@ export const TagService = {
     },
 
     update: async (
+        userId: string,
         tagId: string, 
         allTags: Tag[],
         changes: Partial<Tag>
@@ -101,7 +104,7 @@ export const TagService = {
             }
             
             try {
-                await TagDb.update(tagId, changes);
+                await TagDb.update(userId,tagId, changes);
                 } catch (error) {
                 console.error("update tag failed:", error);
                 throw error;
@@ -109,8 +112,8 @@ export const TagService = {
 
     },
 
-    delete: async(tagId:string):Promise<void> => {
-        await TagDb.delete(tagId);
+    delete: async(userId: string,tagId:string):Promise<void> => {
+        await TagDb.delete(userId,tagId);
     }
 
 };

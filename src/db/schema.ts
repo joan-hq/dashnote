@@ -5,7 +5,8 @@ import { pgTable,
   primaryKey,
   varchar,
   pgEnum,
-uniqueIndex } from "drizzle-orm/pg-core";
+uniqueIndex,
+unique} from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
 export const noteStatusEnum = pgEnum("note_status", ["active", "archived", "trashed"]);
@@ -31,11 +32,15 @@ export const notes = pgTable(
 
 );
 
+
 export const tags = pgTable("tags", {
   id: uuid("id").primaryKey().defaultRandom(),
-  label: text("label").notNull().unique(), 
+  userId: text("user_id").notNull(),
+  label: text("label").notNull(),
   color: text("color").default("#cbd5e1"),
-});
+}, (table) => ({
+  uniqueUserLabel: unique().on(table.userId, table.label),
+}));
 
 
 export const noteTags = pgTable("note_tags", {
