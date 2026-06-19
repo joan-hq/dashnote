@@ -111,7 +111,7 @@ export function useAIChat({ noteContent, onCreateNote }: UseAIChatOptions) {
         onSuccess();
       }
     } catch (err) {
-      console.error("总结并保存笔记失败:", err);
+      console.error("summarise  and insert failed:", err);
     } finally {
       setSummarizing(false);
       setLoading(false);

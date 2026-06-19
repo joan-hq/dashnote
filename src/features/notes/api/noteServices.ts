@@ -1,6 +1,5 @@
 
 import {Note,FilterType, NoteStatus} from '@/features/notes/types/noteType';
-import {Tag} from '@/features/tags/types/tagType';
 import { v4 as uuidv4 } from 'uuid';
 import {NoteDb} from '@/db/noteDb'
 
@@ -44,12 +43,12 @@ export const NoteService = {
         };
 
         try{
-            console.log("🚀 [NoteDb] 准备插入新笔记，数据摘要如下:", { id: newNote.id, title: newNote.title });
+            console.log("🚀 [NoteDb]  try to insert note:", { id: newNote.id, title: newNote.title });
             await NoteDb.insert(newNote);
             return newNote;
 
         }catch(error){
-            console.error("❌ [NoteDb Insert Error] 数据库落库失败! 错误详情:", error);
+            console.error("❌ [NoteDb Insert Error]:", error);
             throw error;
         }
     },
@@ -132,54 +131,6 @@ export const NoteService = {
         }
 
     },
-
-
-    // getFilteredNote: async(
-    //     userId:string,
-    //     allTags: Tag[],
-    //     options: {
-    //         status?: FilterType;
-    //         selectedTagIds?: string[];
-    //         searchQuery?: string;
-    //     }
-    // ): Promise<Note[]> => {
-
-    //     const {
-    //         status="active", 
-    //         selectedTagIds=[],
-    //         searchQuery=""
-    //         } = options;
-
-    //     const query = searchQuery.toLowerCase().trim();
-
-    //     let filteredNote  = await NoteService.filterNoteByStatus(userId,status);
-
-    //     if(selectedTagIds.length > 0){
-    //         filteredNote = filteredNote.filter( 
-    //             (note: Note) =>selectedTagIds.every(id => note.tags.includes(id))
-    //         )
-    //     }
-
-    //     if(query){
-    //         const getMachedTagIdsFromQuery = allTags.filter(
-    //             tag => tag.label.toLowerCase().includes(query)
-    //         ).map( tag => tag.id)
-
-    //         filteredNote = filteredNote.filter(
-    //             (note:Note) => {
-    //                const contentMatch =  note.content.toLowerCase().includes(query);
-    //                const titleMatch = note.title.toLowerCase().includes(query); 
-    //                const tagsMatch = note.tags.some(id => getMachedTagIdsFromQuery.includes(id))
-
-    //                return contentMatch || titleMatch || tagsMatch;
-    //             }
-    //         )
-    //     }
-
-    //     return filteredNote;
-
-
-    // },
 
     sortNoteByEdit: (notes: Note[]):Note[] => {
 

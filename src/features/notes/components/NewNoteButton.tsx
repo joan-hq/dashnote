@@ -8,12 +8,8 @@ export const NewNoteButton = () => {
     if (filterStatus !== 'all') return null;
 
     const handleCreateNote = async () => {
-        // const newNote = await createNote();
-        // if (newNote?.id) {
-        //     router.push(`/dashboard/${newNote.id}`);
-        // }
         if (selectedNoteId) {
-            const currentNote = notes.find(n => n.id === selectedNoteId); // ← 需要从 context 拿 notes 和 selectedNoteId
+            const currentNote = notes.find(n => n.id === selectedNoteId);
             if (currentNote && !currentNote.title && !currentNote.content) {
                 await permanentlyDeleteNote(selectedNoteId);
             }

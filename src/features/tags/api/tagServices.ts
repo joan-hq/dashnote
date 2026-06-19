@@ -103,34 +103,11 @@ export const TagService = {
             try {
                 await TagDb.update(tagId, changes);
                 } catch (error) {
-                console.error("数据库更新标签失败:", error);
+                console.error("update tag failed:", error);
                 throw error;
                 }
 
     },
-
-
-    // delete: (
-    //     tagId: string,
-    //     allTags: Tag[],
-    //     allNotes: Note[],
-    //     updateNote: (newNotes: Note[]) => void
-
-    // ): Tag[] => {
-    //     const newTags = removeById( allTags, tagId);
-
-    //     const cleanNotes = allNotes.map(note => {
-    //         if (!note.tags.includes(tagId)) return note; 
-            
-    //         return {
-    //             ...note,
-    //             tags: note.tags.filter(id => id !== tagId)
-    //         };
-    //     })
-
-    //     updateNote(cleanNotes);
-    //     return newTags;
-    // },
 
     delete: async(tagId:string):Promise<void> => {
         await TagDb.delete(tagId);

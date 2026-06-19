@@ -10,7 +10,7 @@ export default function NoteDetailPage() {
     const { id } = useParams<{ id: string }>();
     const { setSelectedNoteId, notes, selectedNoteId, permanentlyDeleteNote } = useNoteContext();
     const router = useRouter();
-    const [isAiOpen, setIsAiOpen] = useState(false);
+    // const [isAiOpen, setIsAiOpen] = useState(false);
 
     useEffect(() => {
 
@@ -30,10 +30,6 @@ export default function NoteDetailPage() {
     }, [id, notes]);
 
     return (
-        <NoteDisplay
-        // isAiOpen={isAiOpen}
-        // onAiOpen={() => setIsAiOpen(true)}
-        // onAiClose={() => setIsAiOpen(false)}
-        />
+        <NoteDisplay />
     );
 }

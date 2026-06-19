@@ -6,7 +6,6 @@ import { GoogleGenAI } from '@google/genai';
 
 const ai = new GoogleGenAI({apiKey : process.env.GEMINI_API_KEY});
 
-// ✅ 加在这里
 async function generateWithRetry(prompt: string, retries = 3, delay = 2000) {
     for (let i = 0; i < retries; i++) {
         try {
@@ -73,7 +72,7 @@ export async function POST(req: Request){
             ${rawText}
         `;
 
-        // ✅ 换成这个
+   
         const response = await generateWithRetry(prompt);
 
         let rawAiText = (response?.text?.trim()) ?? "";
