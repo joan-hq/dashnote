@@ -1,4 +1,5 @@
 import { ReactNode, useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 
 interface DropDownItem {
     label: string;
@@ -15,11 +16,17 @@ interface DropDownProps {
 
 export const DropDown = ({ trigger, items, header, menuItemClassName }: DropDownProps) => {
     const [open, setOpen] = useState(false);
-    const ref = useRef<HTMLDivElement>(null);
+    const [position, setPosition] = useState({ top: 0, left: 0 });
+    const menuRef = useRef<HTMLDivElement>(null);
+    const triggerRef = useRef<HTMLDivElement>(null);
+
 
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
-            if (ref.current && !ref.current.contains(e.target as Node)) {
+            if (
+                menuRef.current && !menuRef.current.contains(e.target as Node) &&
+                triggerRef.current && !triggerRef.current.contains(e.target as Node)
+            ) {
                 setOpen(false);
             }
         };
@@ -27,13 +34,20 @@ export const DropDown = ({ trigger, items, header, menuItemClassName }: DropDown
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
+    const handleTriggerClick = (e: React.MouseEvent<HTMLElement>) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        setPosition({ top: rect.bottom + 4, left: rect.left });
+        setOpen(prev => !prev);
+    };
+
     return (
-        <div className="relative" ref={ref}>
-            {trigger((e) => setOpen(prev => !prev))}
-            {open && (
+        <div className="relative" ref={triggerRef}>
+            {trigger(handleTriggerClick)}
+            {open && typeof document !== 'undefined' && createPortal(
                 <div
-                    className="absolute right-0 mt-1 min-w-[160px] rounded-xl shadow-lg z-50 py-1 border border-gray-100"
-                    style={{ background: 'var(--surface)' }}
+                    ref={menuRef}
+                    className="fixed min-w-[160px] rounded-xl shadow-lg z-50 py-1 border border-gray-100"
+                    style={{ background: 'var(--surface)', top: position.top, left: position.left }}
                 >
                     {header}
                     {items.map((item) => (
@@ -49,7 +63,8 @@ export const DropDown = ({ trigger, items, header, menuItemClassName }: DropDown
                             {item.label}
                         </button>
                     ))}
-                </div>
+                </div>,
+                document.body
             )}
         </div>
     );
