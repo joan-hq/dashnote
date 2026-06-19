@@ -10,7 +10,7 @@ export const UserMenu = () => {
     if (!session) return null;
 
     return (
-        <DropDown
+        <DropDown direction="up"
             trigger={(onClick) => (
                 <Box
                     onClick={onClick}

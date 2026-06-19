@@ -8,7 +8,7 @@ export const NoteSortButton = () => {
     const { setSortBy } = useNoteContext();
 
     return (<>
-        <DropDown trigger={(onClick) => (
+        <DropDown direction="down" trigger={(onClick) => (
             <button onClick={onClick} className="btn-ghost px-1.5 py-1.5 rounded-full">
                 <SortOutlinedIcon fontSize="small" />
             </button>

@@ -11,9 +11,10 @@ interface DropDownProps {
     items: DropDownItem[];
     header?: ReactNode;
     menuItemClassName?: string;
+    direction?: 'up' | 'down';
 }
 
-export const DropDown = ({ trigger, items, header, menuItemClassName }: DropDownProps) => {
+export const DropDown = ({ trigger, items, header, menuItemClassName, direction = 'down' }: DropDownProps) => {
     const [open, setOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
     const triggerRef = useRef<HTMLDivElement>(null);
@@ -41,7 +42,7 @@ export const DropDown = ({ trigger, items, header, menuItemClassName }: DropDown
             {open && (
                 <div
                     ref={menuRef}
-                    className="absolute bottom-full mb-1 left-0  min-w-[160px] rounded-xl shadow-lg z-50 py-1 border border-gray-100"
+                    className={` absolute right-0  min-w-[160px] rounded-xl shadow-lg z-50 py-1 border border-gray-100 ${direction === 'up' ? 'bottom-full mb-1' : 'top-full mt-1'}`}
                     style={{ background: 'var(--surface)' }}
                 >
                     {header}
@@ -57,9 +58,10 @@ export const DropDown = ({ trigger, items, header, menuItemClassName }: DropDown
                             {item.icon && <span>{item.icon}</span>}
                             {item.label}
                         </button>
-                    ))}
-                </div>
+                    ))
+                    }
+                </div >
             )}
-        </div>
+        </div >
     );
 };
