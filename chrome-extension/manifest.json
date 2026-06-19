@@ -7,7 +7,7 @@
     "host_permissions": [
         "https://chatgpt.com/*",
         "https://gemini.google.com/*",
-        "https://master.d105jspeg7cw15.amplifyapp.com/*"
+        "https://master.d3nid10x8uevsr.amplifyapp.com//*"
     ],
     "content_scripts": [
         {

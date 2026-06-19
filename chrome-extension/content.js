@@ -1,4 +1,5 @@
-const BACKEND_URL = "https://master.d105jspeg7cw15.amplifyapp.com";
+const BACKEND_URL = "https://master.d3nid10x8uevsr.amplifyapp.com/";
+
 
 const btn = document.createElement("button");
 btn.innerHTML = "Sync to DashNote";
